@@ -1,4 +1,3 @@
-# react-capstone-project
 # Final E-Commerce Project
 
 This project is a fully functional e-commerce platform designed to showcase key features commonly found in real-world online stores.

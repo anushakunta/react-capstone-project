@@ -1,4 +1,4 @@
-# Final E-Commerce Project
+# Final E-Commerce Project - React
 
 This project is a fully functional e-commerce platform designed to showcase key features commonly found in real-world online stores.
 

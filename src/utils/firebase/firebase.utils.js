@@ -3,7 +3,8 @@ import {
     getAuth,
     signInWithRedirect,
     signInWithPopup,
-    GoogleAuthProvider 
+    GoogleAuthProvider,
+    createUserWithEmailAndPassword
 } from 'firebase/auth';
 import {
     getFirestore,
@@ -13,12 +14,12 @@ import {
 } from 'firebase/firestore'
 
 const firebaseConfig = {
-  apiKey: "AIzaSyAMuzJaiHMofBW85_hqXY3byNovi-IncL0",
-  authDomain: "chansa-db-69aae.firebaseapp.com",
-  projectId: "chansa-db-69aae",
-  storageBucket: "chansa-db-69aae.firebasestorage.app",
-  messagingSenderId: "927220427305",
-  appId: "1:927220427305:web:4b4a1178b06ff96904ca38"
+    apiKey: "AIzaSyAMuzJaiHMofBW85_hqXY3byNovi-IncL0",
+    authDomain: "chansa-db-69aae.firebaseapp.com",
+    projectId: "chansa-db-69aae",
+    storageBucket: "chansa-db-69aae.firebasestorage.app",
+    messagingSenderId: "927220427305",
+    appId: "1:927220427305:web:4b4a1178b06ff96904ca38"
 };
 
 const app = initializeApp(firebaseConfig);
@@ -30,17 +31,25 @@ provider.setCustomParameters({
 
 export const auth =  getAuth();
 export const signInWithGooglePopup = () => signInWithPopup(auth,provider);
+export const signInWithGoogleRedirect =  async () => {
+    try {
+        debugger;
+      await signInWithRedirect(auth, provider);
+    } catch (error) {
+      console.error('Error initiating Google sign-in:', error);
+    }
+  };
 
 export const db = getFirestore();
 
 export const createUserDocumentFromAuth = async(userAuth) =>{
-    const userDocRef = doc(db,'users',userAuth.uid);
+    if(!userAuth) return;
 
+    const userDocRef = doc(db,'users',userAuth.uid);
     console.log(userDocRef);
-    
     const userSnapshot = await getDoc(userDocRef);
-    console.log(userSnapshot)
-    console.log(userSnapshot.exists());
+    //console.log(userSnapshot)
+    //console.log(userSnapshot.exists());
 
     if(!userSnapshot.exists()){
         const { displayName,email } = userAuth;
@@ -57,4 +66,10 @@ export const createUserDocumentFromAuth = async(userAuth) =>{
         }
     }
     return userDocRef;
+};
+
+export const createAuthUserWithEmailAndPassword = async(email,password)=>{
+    if (!email || !password) return;
+    return await createUserWithEmailAndPassword(auth,email,password)
 }
+

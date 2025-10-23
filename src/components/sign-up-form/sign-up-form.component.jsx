@@ -3,6 +3,7 @@ import { createAuthUserWithEmailAndPassword, createUserDocumentFromAuth } from "
 import FormInput from "../form-input/form-input.component";
 import './sign-up-form.styles.scss';
 import Button from "../button/button.component";
+//import { UserContext } from "../../context/user.context";
 
 const defaultFormFields = {
 	displayName: "",
@@ -15,7 +16,9 @@ const SignUpForm = () => {
 	const [formFields, setFormFields] = useState(defaultFormFields);
 	const { displayName, email, password, confirmPassword } = formFields;
 
-	console.log(formFields);
+	//const {setCurrentUser} = useContext(UserContext);
+
+	//console.log(formFields);
 
 	const handleChange = (event) => {
 		const { name, value } = event.target;
@@ -25,19 +28,25 @@ const SignUpForm = () => {
 
 	const handleSubmit = async (event) => {
 		event.preventDefault();
-		if (password != confirmPassword) {
+		console.log("in handleSubmit");
+		if (password !== confirmPassword) {
 			alert("passwords do not match");
 			return;
 		}
 		try {
 			const { user } = await createAuthUserWithEmailAndPassword(email, password);
-
 			await createUserDocumentFromAuth(user, { displayName });
 			resetFormFields();
 		} catch (error) {
-			if (error.code == 'auth/email-already-in-use') {
-				alert('Cannot create user, email already in use');
+			switch(error.code){
+				case 'auth/email-already-in-use':alert('incorrect password for email');break;
+				case 'auth/user-not-found': alert('no user associated with this email'); break;
+				case 'auth/invalid-credential': alert('invalid credentials'); break;
+				default:console.log(error);
 			}
+			// if (error.code == 'auth/email-already-in-use') {
+			// 	alert('Cannot create user, email already in use');
+			// }
 			console.log("sign-up form error", error)
 		}
 	}

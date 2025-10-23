@@ -3,6 +3,7 @@ import { signInWithGooglePopup, createUserDocumentFromAuth,signInAuthWithEmailAn
 import FormInput from "../form-input/form-input.component";
 import './sign-in-form.styles.scss';
 import Button from "../button/button.component";
+//import { UserContext } from "../../context/user.context";
 
 const defaultFormFields = {
 	email: "",
@@ -13,7 +14,9 @@ const SignInForm = () => {
 	const [formFields, setFormFields] = useState(defaultFormFields);
 	const { email, password } = formFields;
 
-	console.log(formFields);
+	//const {setCurrentUser} = useContext(UserContext);
+
+	//console.log(formFields);
 
 	const handleChange = (event) => {
 		const { name, value } = event.target;
@@ -22,15 +25,17 @@ const SignInForm = () => {
 	}
 
 	const signInWithGoogle = async() =>{
-		const { user } = await signInWithGooglePopup();
-		const userDocRef = await createUserDocumentFromAuth(user)
+		 await signInWithGooglePopup();
+		//createUserDocumentFromAuth(user)
 	}
 
 	const handleSubmit = async (event) => {
 		event.preventDefault();
 		try {
-			const response = await signInAuthWithEmailAndPassword(email,password);
-			console.log(response)
+			const { user } = await signInAuthWithEmailAndPassword(email,password);
+			console.log(user)
+			//setCurrentUser(user);
+			resetFormFields();
 		} catch (error) {
 			switch(error.code){
 				case 'auth/wrong-password':alert('incorrect password for email');break;

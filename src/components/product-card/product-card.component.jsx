@@ -1,12 +1,12 @@
-import './product-card.styles.scss';
+import {ProductCardContainer, Footer,Name,Price} from './product-card.styles';
 import Button, {BUTTON_TYPE_CLASSES} from '../button/button.component';
 import { useContext } from 'react';
-import { ProductsContext } from '../../context/products.context';
-import { UserContext } from '../../context/user.context';   
+import { CartContext } from '../../context/cart.context';
 
 const ProductCard = ({product}) => {
     const {name,price,imageUrl} = product;
-    // const {addItemToCart} = useContext(ProductsContext);
+    const {addItemToCart} = useContext(CartContext);
+    const addProductToCart = () => addItemToCart(product);
     // const {currentUser} = useContext(UserContext);
     // const handleClick = () => {
     //     if(currentUser){
@@ -17,14 +17,14 @@ const ProductCard = ({product}) => {
     // }
 
   return (
-    <div className='product-card-container'>
+    <ProductCardContainer>
         <img src={imageUrl} alt={`${name}`} />
-        <div className='footer'>
-            <span className='name'>{name}</span>
-            <span className='price'>{price}</span>
-        </div>
-        <Button buttonType='inverted'>Add to Cart</Button>
-    </div>
+        <Footer>
+            <Name>{name}</Name>
+            <Price>{price}</Price>
+        </Footer>
+        <Button buttonType={BUTTON_TYPE_CLASSES.inverted} onClick={addProductToCart}>Add to Cart</Button>
+    </ProductCardContainer>
   )
 }
 export default ProductCard;
